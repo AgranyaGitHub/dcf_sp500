@@ -1,1 +1,1 @@
-DCF Proejction Calculator
+Automated model that uses 10+ year historical financial data on the S&P 500 companies to create an accurate 
