@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
-from firstdraft import DCF, get_sp500_ticker_list
+from model import DCF, get_sp500_ticker_list
 import json
+import yfinance as yf
 
 app = Flask(__name__)
 
@@ -17,7 +18,8 @@ def home():
 @app.route('/get_companies')
 def get_companies():
     companies = get_sp500_ticker_list()
-    return jsonify(companies)
+    return render_template("index.html", companies = json.dumps(companies))
+    # return jsonify(companies)
 
 @app.route('/calculate', methods = ["POST", "GET"])
 def predict():
@@ -25,8 +27,14 @@ def predict():
     # data = request.get_json()
     ticker = request.form['ticker']
     price_prediction = DCF(ticker)
+    curr_price = yf.Ticker(ticker).info.get("currentPrice")
+    pct_diff = (price_prediction - curr_price) / curr_price * 100
     # return jsonify({"ticker": ticker, "predicted_price": price_prediction})
-    return render_template('index.html', ticker = ticker, dcf_value = price_prediction)
+    return render_template('index.html',
+                           ticker = ticker,
+                           dcf_value = price_prediction,
+                           curr_price = curr_price,
+                           pct_diff = pct_diff)
     
     # except Exception as e:
     #     return jsonify({"error": str(e)}), 500
