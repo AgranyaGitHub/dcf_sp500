@@ -4,8 +4,9 @@ import pandas_datareader.data as web
 import datetime
 import bs4 as bs
 import requests
+from AVapikey import get_AVapikey
 
-AV_apikey = "X5KOQR5HRJ1NMVD9"
+AV_apikey = get_AVapikey()
 risk_free_rate = yf.Ticker("^TNX").info.get("previousClose") / 100
 sp500 = yf.download("^GSPC", start = "1996-11-22", end = datetime.datetime.now().strftime("%Y-%m-%d"))
 market_return = ((1 + sp500["Adj Close"].pct_change().dropna().mean()) ** 252) - 1
